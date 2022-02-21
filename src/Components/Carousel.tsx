@@ -1,21 +1,29 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useReducer, useState } from "react";
+import { useEffect, useReducer, useRef, useState } from "react";
 import styled from "styled-components";
 import { ApiData } from "../api";
-import { getLastPage } from "../utils";
+import { getImage, getLastPage } from "../utils";
+import { BsChevronCompactLeft, BsChevronCompactRight } from "react-icons/bs";
 
 interface Action {
   type: "INCREMENT" | "DECREMENT" | "RESIZE";
 }
 
-const Container = styled.div`
-  padding: 0 20px;
+const Container = styled.div<{ rowheight: number }>`
+  position: relative;
+  height: ${(props) => props.rowheight}px;
+
+  &:hover button {
+    display: block;
+  }
 `;
 
 const Row = styled(motion.ul)`
+  position: absolute;
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   column-gap: 10px;
+  padding: 0 30px;
 
   @media (max-width: 1400px) {
     grid-template-columns: repeat(5, 1fr);
@@ -34,8 +42,26 @@ const Row = styled(motion.ul)`
   }
 `;
 
-const Box = styled.li`
-  background-color: black;
+const Box = styled.li``;
+
+const Img = styled.img`
+  width: 100%;
+`;
+
+const Buttons = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+`;
+
+const Button = styled.button`
+  all: unset;
+  height: 100%;
+  cursor: pointer;
+  font-size: 30px;
+  display: none;
 `;
 
 function Carousel({ data }: { data?: ApiData }) {
@@ -76,12 +102,24 @@ function Carousel({ data }: { data?: ApiData }) {
   };
 
   const [page, dispatch] = useReducer(reducer, 0);
+  const [isLeaving, setIsLeaving] = useState(false);
+  const [isBack, setIsBack] = useState(false);
+  const [rowHeight, setRowHeight] = useState(0);
+  const rowElement = useRef<any>(null);
 
   const nextPage = () => {
+    if (isLeaving) return;
+
+    setIsBack(false);
+    setIsLeaving(true);
     dispatch({ type: "INCREMENT" });
   };
 
   const prevPage = () => {
+    if (isLeaving) return;
+
+    setIsBack(true);
+    setIsLeaving(true);
     dispatch({ type: "DECREMENT" });
   };
 
@@ -97,22 +135,44 @@ function Carousel({ data }: { data?: ApiData }) {
     return () => window.removeEventListener("resize", onResize);
   }, [offset, lastPage, dataLength]);
 
+  useEffect(() => {
+    setRowHeight(rowElement.current.offsetHeight);
+  }, [rowElement]);
+
   return (
-    <Container>
-      <AnimatePresence>
-        <Row>
+    <Container rowheight={rowHeight}>
+      <AnimatePresence
+        initial={false}
+        onExitComplete={() => setIsLeaving((prev) => !prev)}
+      >
+        <Row
+          ref={rowElement}
+          key={page}
+          initial={{ x: isBack ? -window.innerWidth : window.innerWidth }}
+          animate={{ x: 0 }}
+          exit={{ x: isBack ? window.innerWidth : -window.innerWidth }}
+          transition={{ type: "tween", ease: "easeInOut", duration: 0.5 }}
+        >
           {data?.results
             .slice(
               page === lastPage ? dataLength - offset : offset * page,
               page === lastPage ? dataLength : offset * page + offset
             )
             .map((movie) => (
-              <Box key={movie.id}>{movie.title}</Box>
+              <Box key={movie.id}>
+                <Img src={getImage(movie.backdrop_path, "w500")} />
+              </Box>
             ))}
         </Row>
       </AnimatePresence>
-      <button onClick={prevPage}>{"<"}</button>
-      <button onClick={nextPage}>{">"}</button>
+      <Buttons>
+        <Button onClick={prevPage}>
+          <BsChevronCompactLeft />
+        </Button>
+        <Button onClick={nextPage}>
+          <BsChevronCompactRight />
+        </Button>
+      </Buttons>
     </Container>
   );
 }

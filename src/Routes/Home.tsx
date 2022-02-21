@@ -9,7 +9,17 @@ function Home() {
     getTopRatedMovies
   );
 
-  return <>{isLoading ? <Loading /> : <Carousel data={data} />}</>;
+  return (
+    <>
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <>
+          <Carousel data={data} />
+        </>
+      )}
+    </>
+  );
 }
 
 export default Home;

@@ -15,3 +15,5 @@
 -[x] : styled-components
 
 -[x] : framer-motion
+
+-[x] : react-icons
