@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useReducer, useState } from "react";
 import styled from "styled-components";
 import { ApiData } from "../api";
+import { getLastPage } from "../utils";
 
 interface Action {
   type: "INCREMENT" | "DECREMENT" | "RESIZE";
@@ -57,7 +58,7 @@ function Carousel({ data }: { data?: ApiData }) {
     calculateRelativeOffset(window.innerWidth)
   );
   const [lastPage, setLastPage] = useState(
-    Math.floor((data?.results.length || 0) / offset) - 1
+    getLastPage(data?.results.length || 0, offset)
   );
 
   const reducer = (state: number, action: Action) => {
@@ -94,7 +95,7 @@ function Carousel({ data }: { data?: ApiData }) {
   }, []);
 
   useEffect(() => {
-    setLastPage(Math.floor((data?.results.length || 0) / offset) - 1);
+    setLastPage(getLastPage(data?.results.length || 0, offset));
   }, [offset]);
 
   useEffect(() => {
