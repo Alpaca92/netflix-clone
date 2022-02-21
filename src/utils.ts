@@ -3,3 +3,4 @@ export const getImage = (path: string, format?: string) =>
 
 export const getLastPage = (pages: number, offset: number) =>
   Math.ceil(pages / offset) - 1;
+

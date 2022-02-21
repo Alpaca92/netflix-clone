@@ -39,6 +39,7 @@ const Box = styled.li`
 `;
 
 function Carousel({ data }: { data?: ApiData }) {
+  const dataLength = data?.results.length || 0;
   const calculateRelativeOffset = (width: number) => {
     switch (true) {
       case width <= 500:
@@ -58,7 +59,7 @@ function Carousel({ data }: { data?: ApiData }) {
     calculateRelativeOffset(window.innerWidth)
   );
   const [lastPage, setLastPage] = useState(
-    getLastPage(data?.results.length || 0, offset)
+    getLastPage(dataLength || 0, offset)
   );
 
   const reducer = (state: number, action: Action) => {
@@ -90,24 +91,21 @@ function Carousel({ data }: { data?: ApiData }) {
     };
 
     window.addEventListener("resize", onResize);
+    setLastPage(getLastPage(dataLength || 0, offset));
+    dispatch({ type: "RESIZE" });
 
     return () => window.removeEventListener("resize", onResize);
-  }, []);
-
-  useEffect(() => {
-    setLastPage(getLastPage(data?.results.length || 0, offset));
-  }, [offset]);
-
-  useEffect(() => {
-    dispatch({ type: "RESIZE" });
-  }, [lastPage]);
+  }, [offset, lastPage, dataLength]);
 
   return (
     <Container>
       <AnimatePresence>
         <Row>
           {data?.results
-            .slice(offset * page, offset * page + offset)
+            .slice(
+              page === lastPage ? dataLength - offset : offset * page,
+              page === lastPage ? dataLength : offset * page + offset
+            )
             .map((movie) => (
               <Box key={movie.id}>{movie.title}</Box>
             ))}
