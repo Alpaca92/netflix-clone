@@ -11,5 +11,6 @@ declare module "styled-components" {
       plain: string;
       light: string;
     };
+    red: string;
   }
 }

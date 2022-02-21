@@ -10,4 +10,5 @@ export const theme: DefaultTheme = {
     plain: "#e5e5e5",
     light: "#ffffff",
   },
+  red: "#e50914",
 };
