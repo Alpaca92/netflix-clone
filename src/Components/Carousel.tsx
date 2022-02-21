@@ -64,6 +64,16 @@ const Button = styled.button`
   display: none;
 `;
 
+const rowVariants = {
+  hidden: ({ isBack }: { isBack: boolean }) => ({
+    x: isBack ? -window.innerWidth : window.innerWidth,
+  }),
+  visible: { x: 0 },
+  exit: ({ isBack }: { isBack: boolean }) => ({
+    x: isBack ? window.innerWidth : -window.innerWidth,
+  }),
+};
+
 function Carousel({ data }: { data?: ApiData }) {
   const dataLength = data?.results.length || 0;
   const calculateRelativeOffset = (width: number) => {
@@ -142,15 +152,18 @@ function Carousel({ data }: { data?: ApiData }) {
   return (
     <Container rowheight={rowHeight}>
       <AnimatePresence
+        custom={{ isBack }}
         initial={false}
         onExitComplete={() => setIsLeaving((prev) => !prev)}
       >
         <Row
           ref={rowElement}
           key={page}
-          initial={{ x: isBack ? -window.innerWidth : window.innerWidth }}
-          animate={{ x: 0 }}
-          exit={{ x: isBack ? window.innerWidth : -window.innerWidth }}
+          custom={{ isBack }}
+          variants={rowVariants}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
           transition={{ type: "tween", ease: "easeInOut", duration: 0.5 }}
         >
           {data?.results
