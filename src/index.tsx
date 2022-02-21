@@ -34,7 +34,9 @@ const GlobalStyle = createGlobalStyle`
       display: block;
     }
     body {
-      
+      background-color: ${(props) => props.theme.black.dark};
+      color: ${(props) => props.theme.white.plain};
+      font-family: 'Nanum Gothic', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
     }
     ol, ul {
       list-style: none;
