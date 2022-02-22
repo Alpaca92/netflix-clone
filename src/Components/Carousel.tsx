@@ -34,9 +34,8 @@ const Container = styled.div`
 
 const Row = styled(motion.ul)<RowProps>`
   display: grid;
-  // width 정확하게 계산하기 -> 화면에 offset만큼의 image가 보이고 gap도 보이게
   width: ${(props) =>
-    window.innerWidth * (props.$datalength / props.$offset)}px;
+    ((window.innerWidth - props.$columngap) * (props.$datalength / props.$offset) + props.$columngap)}px;
   grid-template-columns: repeat(${(props) => props.$datalength}, 1fr);
   padding: 0 ${(props) => props.$columngap}px;
   column-gap: ${(props) => props.$columngap}px;
