@@ -1,8 +1,20 @@
 import styled from "styled-components";
+import { useViewportScroll, motion, useAnimation } from "framer-motion";
+import profile01 from "../images/profile01.png";
+import profile02 from "../images/profile02.png";
+import profile03 from "../images/profile03.png";
+import profile04 from "../images/profile04.png";
+import { useEffect } from "react";
 
-const Nav = styled.nav`
+const Nav = styled(motion.nav)`
   padding: 20px 60px;
   font-size: 14px;
+  display: flex;
+  justify-content: space-between;
+  position: fixed;
+  top: 0;
+  z-index: 999;
+  width: 100%;
 `;
 
 const Col = styled.div`
@@ -27,9 +39,35 @@ const Item = styled.li`
   }
 `;
 
+const Profile = styled.div`
+  width: 32px;
+  height: 32px;
+  background-image: url(${[profile01, profile02, profile03, profile04][Math.floor(Math.random() * 4 + 1)]});
+  background-size: cover;
+  border-radius: 5px;
+`;
+
+const NavVariants = {
+  initial: { backgroundColor: "rgba(0, 0, 0, 0)" },
+  scroll: { backgroundColor: "rgba(0, 0, 0, 1)" },
+};
+
 function Header() {
+  const { scrollY } = useViewportScroll();
+  const navAnimation = useAnimation();
+
+  useEffect(() => {
+    scrollY.onChange(() => {
+      if (scrollY.get() > 80) {
+        navAnimation.start("scroll");
+      } else {
+        navAnimation.start("initial");
+      }
+    })
+  }, [scrollY, navAnimation]);
+
   return (
-    <Nav>
+    <Nav variants={NavVariants} initial="initial" animate={navAnimation}>
       <Col>
         <Logo
           xmlns="http://www.w3.org/2000/svg"
@@ -44,6 +82,9 @@ function Header() {
           <Item>시리즈</Item>
           <Item>영화</Item>
         </Items>
+      </Col>
+      <Col>
+        <Profile />
       </Col>
     </Nav>
   );
