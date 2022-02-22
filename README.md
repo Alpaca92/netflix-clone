@@ -2,18 +2,15 @@
 
 ## Skills & Tools
 
--[x] : React.js
+- [x] React.js
+- [x] recoil
+- [x] react-router
+- [x] react-query
+- [x] react-hook-form
+- [x] styled-components
+- [x] framer-motion
+- [x] react-icons
 
--[x] : recoil
+## API
 
--[x] : react-router
-
--[x] : react-query
-
--[x] : react-hook-form
-
--[x] : styled-components
-
--[x] : framer-motion
-
--[x] : react-icons
+- [x] [TMDB](https://developers.themoviedb.org/3)
