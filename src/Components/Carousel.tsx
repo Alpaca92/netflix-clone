@@ -108,15 +108,15 @@ function Carousel({ data }: { data?: ApiData }) {
         return (index =
           index + offset >= dataLength
             ? 0
-            : index + offset >= startingIndexOfLastPage
+            : index + offset >= dataLength - offset
             ? dataLength - offset
             : index + offset);
       case "DECREMENT":
         return (index =
-          index === dataLength - startingIndexOfLastPage
-            ? 0
-            : index === 0
+          index === 0
             ? dataLength - offset
+            : index <= (dataLength % offset || offset)
+            ? 0
             : index - offset);
       case "RESIZE":
         return index > dataLength - offset ? dataLength - offset : index;
@@ -131,9 +131,6 @@ function Carousel({ data }: { data?: ApiData }) {
     calculateRelativeOffset(window.innerWidth)
   );
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  const [startingIndexOfLastPage, setStartingIndexOfLastPage] = useState(
-    dataLength - (dataLength % offset || offset)
-  );
   const [index, dispatch] = useReducer(reducer, 0);
 
   useEffect(() => {
@@ -148,7 +145,6 @@ function Carousel({ data }: { data?: ApiData }) {
   }, []);
 
   useEffect(() => {
-    setStartingIndexOfLastPage(dataLength - (dataLength % offset || offset));
     dispatch({ type: "RESIZE" });
   }, [offset, dataLength]);
 
@@ -171,7 +167,7 @@ function Carousel({ data }: { data?: ApiData }) {
         variants={rowVariants}
         initial="initial"
         animate="move"
-        transition={{ type: "tween", ease: "easeInOut", duration: 1 }}
+        transition={{ type: "tween", ease: "easeInOut", duration: 0.8 }}
       >
         {data?.results.map((movie) => (
           <Box key={movie.id}>
