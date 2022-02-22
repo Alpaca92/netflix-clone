@@ -5,21 +5,17 @@ import { ApiData } from "../api";
 import { getImage } from "../utils";
 import { BsChevronCompactLeft, BsChevronCompactRight } from "react-icons/bs";
 
-interface RowSize {
-  rowWidth: number;
-  rowHeight: number;
-}
-
 interface RowProps {
-  $rowsize: RowSize; // 안쓰여지는 듯?
-  $columngap: number;
+  $imagegap: number;
   $offset: number;
   $datalength: number;
 }
 
 interface rowVariantsProps {
-  offset: number;
   index: number;
+  imageGap: number;
+  dataLength: number;
+  offset: number;
 }
 
 interface Action {
@@ -35,10 +31,12 @@ const Container = styled.div`
 const Row = styled(motion.ul)<RowProps>`
   display: grid;
   width: ${(props) =>
-    ((window.innerWidth - props.$columngap) * (props.$datalength / props.$offset) + props.$columngap)}px;
+    (window.innerWidth - props.$imagegap) *
+      (props.$datalength / props.$offset) +
+    props.$imagegap}px;
   grid-template-columns: repeat(${(props) => props.$datalength}, 1fr);
-  padding: 0 ${(props) => props.$columngap}px;
-  column-gap: ${(props) => props.$columngap}px;
+  padding: 0 ${(props) => props.$imagegap}px;
+  column-gap: ${(props) => props.$imagegap}px;
 `;
 
 const Box = styled.li``;
@@ -62,9 +60,14 @@ const Button = styled.button`
 
 const rowVariants = {
   initial: { x: 0 },
-  move: ({ index, offset }: rowVariantsProps) => {
-    // 312를 실제 하나의 image + gap의 width로 변경하기
-    return { x: -(312 * index) };
+  move: ({ index, offset, imageGap, dataLength }: rowVariantsProps) => {
+    return {
+      x: -(
+        (((window.innerWidth - imageGap) * (dataLength / offset)) /
+          dataLength) *
+        index
+      ),
+    };
   },
 };
 
@@ -110,7 +113,7 @@ function Carousel({ data }: { data?: ApiData }) {
   };
 
   const [dataLength, setDataLength] = useState(data?.results.length || 0);
-  const [columnGap, setColumnGap] = useState(10);
+  const [imageGap, setImageGap] = useState(10);
   const [offset, setOffset] = useState(
     calculateRelativeOffset(window.innerWidth)
   );
@@ -159,10 +162,9 @@ function Carousel({ data }: { data?: ApiData }) {
       <Row
         ref={rowElement}
         $offset={offset}
-        $columngap={columnGap}
-        $rowsize={rowSize}
+        $imagegap={imageGap}
         $datalength={dataLength}
-        custom={{ index, offset }}
+        custom={{ index, offset, imageGap, dataLength }}
         variants={rowVariants}
         initial="initial"
         animate="move"
