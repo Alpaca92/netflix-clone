@@ -9,6 +9,7 @@ interface RowProps {
   $imagegap: number;
   $offset: number;
   $datalength: number;
+  $windowwidth: number;
 }
 
 interface rowVariantsProps {
@@ -16,6 +17,7 @@ interface rowVariantsProps {
   imageGap: number;
   dataLength: number;
   offset: number;
+  windowWidth: number;
 }
 
 interface Action {
@@ -31,7 +33,7 @@ const Container = styled.div`
 const Row = styled(motion.ul)<RowProps>`
   display: grid;
   width: ${(props) =>
-    (window.innerWidth - props.$imagegap) *
+    (props.$windowwidth - props.$imagegap) *
       (props.$datalength / props.$offset) +
     props.$imagegap}px;
   grid-template-columns: repeat(${(props) => props.$datalength}, 1fr);
@@ -60,11 +62,16 @@ const Button = styled.button`
 
 const rowVariants = {
   initial: { x: 0 },
-  move: ({ index, offset, imageGap, dataLength }: rowVariantsProps) => {
+  move: ({
+    index,
+    offset,
+    imageGap,
+    dataLength,
+    windowWidth,
+  }: rowVariantsProps) => {
     return {
       x: -(
-        (((window.innerWidth - imageGap) * (dataLength / offset)) /
-          dataLength) *
+        (((windowWidth - imageGap) * (dataLength / offset)) / dataLength) *
         index
       ),
     };
@@ -93,7 +100,7 @@ function Carousel({ data }: { data?: ApiData }) {
         return (index =
           index + offset >= dataLength
             ? 0
-            : index + offset === startingIndexOfLastPage
+            : index + offset >= startingIndexOfLastPage
             ? dataLength - offset
             : index + offset);
       case "DECREMENT":
@@ -110,11 +117,12 @@ function Carousel({ data }: { data?: ApiData }) {
     }
   };
 
-  const [dataLength, setDataLength] = useState(data?.results.length || 0);
-  const [imageGap, setImageGap] = useState(10);
+  const [dataLength] = useState(data?.results.length || 0);
+  const [imageGap] = useState(10);
   const [offset, setOffset] = useState(
     calculateRelativeOffset(window.innerWidth)
   );
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [startingIndexOfLastPage, setStartingIndexOfLastPage] = useState(
     dataLength - (dataLength % offset || offset)
   );
@@ -123,6 +131,7 @@ function Carousel({ data }: { data?: ApiData }) {
   useEffect(() => {
     const onResize = () => {
       setOffset(calculateRelativeOffset(window.innerWidth));
+      setWindowWidth(window.innerWidth);
     };
 
     window.addEventListener("resize", onResize);
@@ -149,7 +158,8 @@ function Carousel({ data }: { data?: ApiData }) {
         $offset={offset}
         $imagegap={imageGap}
         $datalength={dataLength}
-        custom={{ index, offset, imageGap, dataLength }}
+        $windowwidth={windowWidth}
+        custom={{ index, offset, imageGap, dataLength, windowWidth }}
         variants={rowVariants}
         initial="initial"
         animate="move"
