@@ -15,8 +15,12 @@ export interface ApiData {
   results: Result[];
 }
 
-export const getTopRatedMovies = async () => {
-  return await (
+export const getTopRatedMovies = async () =>
+  await (
     await fetch(`${BASE_URL}/movie/top_rated?api_key=${TBDB_KEY}&language=ko`)
   ).json();
-};
+
+export const getNowPlayingMovies = async () =>
+  await (
+    await fetch(`${BASE_URL}/movie/now_playing?api_key=${TBDB_KEY}&language=ko`)
+  ).json();
