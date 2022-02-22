@@ -63,7 +63,7 @@ function Header() {
       } else {
         navAnimation.start("initial");
       }
-    })
+    });
   }, [scrollY, navAnimation]);
 
   return (

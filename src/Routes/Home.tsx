@@ -10,7 +10,7 @@ function Home() {
     getTopRatedMovies
   );
   const { data: nowPlayingData, isLoading: nowPlayingLoading } =
-    useQuery<ApiData>(["movies", "nowPlaying", getNowPlayingMovies]);
+    useQuery<ApiData>(["movies", "nowPlaying"], getNowPlayingMovies);
   const isLoading = topRatedLoading && nowPlayingLoading;
 
   return (

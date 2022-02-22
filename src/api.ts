@@ -24,3 +24,6 @@ export const getNowPlayingMovies = async () =>
   await (
     await fetch(`${BASE_URL}/movie/now_playing?api_key=${TBDB_KEY}&language=ko`)
   ).json();
+
+
+  // https://api.themoviedb.org/3/movie/now_playing?api_key=2fb9b79ab51f1e3d6820fdd5feda6a3e&language=ko
