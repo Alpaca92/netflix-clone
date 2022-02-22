@@ -104,9 +104,7 @@ function Carousel({ data }: { data?: ApiData }) {
             ? dataLength - offset
             : index - offset);
       case "RESIZE":
-        return index > startingIndexOfLastPage
-          ? startingIndexOfLastPage
-          : index;
+        return index > dataLength - offset ? dataLength - offset : index;
       default:
         return index;
     }
@@ -121,8 +119,6 @@ function Carousel({ data }: { data?: ApiData }) {
     dataLength - (dataLength % offset || offset)
   );
   const [index, dispatch] = useReducer(reducer, 0);
-  const [rowSize, setRowSize] = useState({ rowWidth: 0, rowHeight: 0 });
-  const rowElement = useRef<any>(null);
 
   useEffect(() => {
     const onResize = () => {
@@ -132,22 +128,12 @@ function Carousel({ data }: { data?: ApiData }) {
     window.addEventListener("resize", onResize);
 
     return () => window.removeEventListener("resize", onResize);
-  }, [startingIndexOfLastPage]);
+  }, []);
 
   useEffect(() => {
     setStartingIndexOfLastPage(dataLength - (dataLength % offset || offset));
-  }, [offset, dataLength]);
-
-  useEffect(() => {
     dispatch({ type: "RESIZE" });
-  }, [startingIndexOfLastPage]);
-
-  useEffect(() => {
-    setRowSize({
-      rowWidth: rowElement.current.offsetWidth,
-      rowHeight: rowElement.current.offsetHeight,
-    });
-  }, [rowElement]);
+  }, [offset, dataLength]);
 
   const nextPage = () => {
     dispatch({ type: "INCREMENT" });
@@ -160,7 +146,6 @@ function Carousel({ data }: { data?: ApiData }) {
   return (
     <Container>
       <Row
-        ref={rowElement}
         $offset={offset}
         $imagegap={imageGap}
         $datalength={dataLength}
