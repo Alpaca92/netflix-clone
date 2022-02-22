@@ -1,9 +1,9 @@
 import { motion } from "framer-motion";
-import { useEffect, useReducer, useRef, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import styled from "styled-components";
 import { ApiData } from "../api";
 import { getImage } from "../utils";
-import { BsChevronCompactLeft, BsChevronCompactRight } from "react-icons/bs";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 interface RowProps {
   $imagegap: number;
@@ -25,6 +25,8 @@ interface Action {
 }
 
 const Container = styled.div`
+  position: relative;
+
   &:hover button {
     display: block;
   }
@@ -41,23 +43,29 @@ const Row = styled(motion.ul)<RowProps>`
   column-gap: ${(props) => props.$imagegap}px;
 `;
 
-const Box = styled.li``;
+const Box = styled.li`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
 const Img = styled.img`
   width: 100%;
 `;
 
-const Buttons = styled.div`
-  display: flex;
-  justify-content: space-between;
-`;
-
-const Button = styled.button`
+const Button = styled(motion.button)`
   all: unset;
+  position: absolute;
+  top: 0;
   height: 100%;
   cursor: pointer;
-  font-size: 30px;
+  font-size: 20px;
+  color: ${(props) => props.theme.white.light};
   display: none;
+
+  &:last-child {
+    right: 0;
+  }
 `;
 
 const rowVariants = {
@@ -171,14 +179,18 @@ function Carousel({ data }: { data?: ApiData }) {
           </Box>
         ))}
       </Row>
-      <Buttons>
-        <Button onClick={prevPage}>
-          <BsChevronCompactLeft />
-        </Button>
-        <Button onClick={nextPage}>
-          <BsChevronCompactRight />
-        </Button>
-      </Buttons>
+      <Button
+        onClick={prevPage}
+        whileHover={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
+      >
+        <FaChevronLeft />
+      </Button>
+      <Button
+        onClick={nextPage}
+        whileHover={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
+      >
+        <FaChevronRight />
+      </Button>
     </Container>
   );
 }
