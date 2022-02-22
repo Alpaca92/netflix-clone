@@ -5,6 +5,7 @@ import profile02 from "../images/profile02.png";
 import profile03 from "../images/profile03.png";
 import profile04 from "../images/profile04.png";
 import { useEffect } from "react";
+import { useForm } from "react-hook-form";
 
 const Nav = styled(motion.nav)`
   padding: 20px 60px;
@@ -39,10 +40,18 @@ const Item = styled.li`
   }
 `;
 
+const Search = styled.form``;
+
+const Input = styled.input`
+  margin-right: 20px;
+`;
+
 const Profile = styled.div`
   width: 32px;
   height: 32px;
-  background-image: url(${[profile01, profile02, profile03, profile04][Math.floor(Math.random() * 4 + 1)]});
+  background-image: url(${[profile01, profile02, profile03, profile04][
+    Math.floor(Math.random() * 4 + 1)
+  ]});
   background-size: cover;
   border-radius: 5px;
 `;
@@ -55,6 +64,9 @@ const NavVariants = {
 function Header() {
   const { scrollY } = useViewportScroll();
   const navAnimation = useAnimation();
+  const { register, handleSubmit } = useForm<{ keyword: string }>();
+
+  const onSubmit = ({ keyword }: { keyword: string }) => {};
 
   useEffect(() => {
     scrollY.onChange(() => {
@@ -84,6 +96,13 @@ function Header() {
         </Items>
       </Col>
       <Col>
+        <Search onSubmit={handleSubmit(onSubmit)}>
+          <Input
+            {...register("keyword", { required: true })}
+            type="text"
+            placeholder="제목, 사람, 영화"
+          />
+        </Search>
         <Profile />
       </Col>
     </Nav>
