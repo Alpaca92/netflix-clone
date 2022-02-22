@@ -1,45 +1,45 @@
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { useEffect, useReducer, useRef, useState } from "react";
 import styled from "styled-components";
 import { ApiData } from "../api";
-import { getImage, getLastPage } from "../utils";
+import { getImage } from "../utils";
 import { BsChevronCompactLeft, BsChevronCompactRight } from "react-icons/bs";
+
+interface RowSize {
+  rowWidth: number;
+  rowHeight: number;
+}
+
+interface RowProps {
+  $rowsize: RowSize; // 안쓰여지는 듯?
+  $columngap: number;
+  $offset: number;
+  $datalength: number;
+}
+
+interface rowVariantsProps {
+  offset: number;
+  index: number;
+}
 
 interface Action {
   type: "INCREMENT" | "DECREMENT" | "RESIZE";
 }
 
-const Container = styled.div<{ rowheight: number }>`
-  position: relative;
-  height: ${(props) => props.rowheight}px;
-
+const Container = styled.div`
   &:hover button {
     display: block;
   }
 `;
 
-const Row = styled(motion.ul)`
-  position: absolute;
+const Row = styled(motion.ul)<RowProps>`
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  column-gap: 10px;
-  padding: 0 30px;
-
-  @media (max-width: 1400px) {
-    grid-template-columns: repeat(5, 1fr);
-  }
-
-  @media (max-width: 1100px) {
-    grid-template-columns: repeat(4, 1fr);
-  }
-
-  @media (max-width: 800px) {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  @media (max-width: 500px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
+  // width 정확하게 계산하기 -> 화면에 offset만큼의 image가 보이고 gap도 보이게
+  width: ${(props) =>
+    window.innerWidth * (props.$datalength / props.$offset)}px;
+  grid-template-columns: repeat(${(props) => props.$datalength}, 1fr);
+  padding: 0 ${(props) => props.$columngap}px;
+  column-gap: ${(props) => props.$columngap}px;
 `;
 
 const Box = styled.li``;
@@ -49,9 +49,6 @@ const Img = styled.img`
 `;
 
 const Buttons = styled.div`
-  position: absolute;
-  width: 100%;
-  height: 100%;
   display: flex;
   justify-content: space-between;
 `;
@@ -65,17 +62,14 @@ const Button = styled.button`
 `;
 
 const rowVariants = {
-  hidden: ({ isBack }: { isBack: boolean }) => ({
-    x: isBack ? -window.innerWidth : window.innerWidth,
-  }),
-  visible: { x: 0 },
-  exit: ({ isBack }: { isBack: boolean }) => ({
-    x: isBack ? window.innerWidth : -window.innerWidth,
-  }),
+  initial: { x: 0 },
+  move: ({ index, offset }: rowVariantsProps) => {
+    // 312를 실제 하나의 image + gap의 width로 변경하기
+    return { x: -(312 * index) };
+  },
 };
 
 function Carousel({ data }: { data?: ApiData }) {
-  const dataLength = data?.results.length || 0;
   const calculateRelativeOffset = (width: number) => {
     switch (true) {
       case width <= 500:
@@ -91,47 +85,42 @@ function Carousel({ data }: { data?: ApiData }) {
     }
   };
 
-  const [offset, setOffset] = useState(
-    calculateRelativeOffset(window.innerWidth)
-  );
-  const [lastPage, setLastPage] = useState(
-    getLastPage(dataLength || 0, offset)
-  );
-
-  const reducer = (state: number, action: Action) => {
+  const reducer = (index: number, action: Action) => {
     switch (action.type) {
       case "INCREMENT":
-        return state === lastPage ? 0 : state + 1;
+        return (index =
+          index + offset >= dataLength
+            ? 0
+            : index + offset === startingIndexOfLastPage
+            ? dataLength - offset
+            : index + offset);
       case "DECREMENT":
-        return state === 0 ? lastPage : state - 1;
+        return (index =
+          index === dataLength - startingIndexOfLastPage
+            ? 0
+            : index === 0
+            ? dataLength - offset
+            : index - offset);
       case "RESIZE":
-        return state > lastPage ? lastPage : state;
+        return index > startingIndexOfLastPage
+          ? startingIndexOfLastPage
+          : index;
       default:
-        return state;
+        return index;
     }
   };
 
-  const [page, dispatch] = useReducer(reducer, 0);
-  const [isLeaving, setIsLeaving] = useState(false);
-  const [isBack, setIsBack] = useState(false);
-  const [rowHeight, setRowHeight] = useState(0);
+  const [dataLength, setDataLength] = useState(data?.results.length || 0);
+  const [columnGap, setColumnGap] = useState(10);
+  const [offset, setOffset] = useState(
+    calculateRelativeOffset(window.innerWidth)
+  );
+  const [startingIndexOfLastPage, setStartingIndexOfLastPage] = useState(
+    dataLength - (dataLength % offset || offset)
+  );
+  const [index, dispatch] = useReducer(reducer, 0);
+  const [rowSize, setRowSize] = useState({ rowWidth: 0, rowHeight: 0 });
   const rowElement = useRef<any>(null);
-
-  const nextPage = () => {
-    if (isLeaving) return;
-
-    setIsBack(false);
-    setIsLeaving(true);
-    dispatch({ type: "INCREMENT" });
-  };
-
-  const prevPage = () => {
-    if (isLeaving) return;
-
-    setIsBack(true);
-    setIsLeaving(true);
-    dispatch({ type: "DECREMENT" });
-  };
 
   useEffect(() => {
     const onResize = () => {
@@ -139,45 +128,53 @@ function Carousel({ data }: { data?: ApiData }) {
     };
 
     window.addEventListener("resize", onResize);
-    setLastPage(getLastPage(dataLength || 0, offset));
-    dispatch({ type: "RESIZE" });
 
     return () => window.removeEventListener("resize", onResize);
-  }, [offset, lastPage, dataLength]);
+  }, [startingIndexOfLastPage]);
 
   useEffect(() => {
-    setRowHeight(rowElement.current.offsetHeight);
+    setStartingIndexOfLastPage(dataLength - (dataLength % offset || offset));
+  }, [offset, dataLength]);
+
+  useEffect(() => {
+    dispatch({ type: "RESIZE" });
+  }, [startingIndexOfLastPage]);
+
+  useEffect(() => {
+    setRowSize({
+      rowWidth: rowElement.current.offsetWidth,
+      rowHeight: rowElement.current.offsetHeight,
+    });
   }, [rowElement]);
 
+  const nextPage = () => {
+    dispatch({ type: "INCREMENT" });
+  };
+
+  const prevPage = () => {
+    dispatch({ type: "DECREMENT" });
+  };
+
   return (
-    <Container rowheight={rowHeight}>
-      <AnimatePresence
-        custom={{ isBack }}
-        initial={false}
-        onExitComplete={() => setIsLeaving((prev) => !prev)}
+    <Container>
+      <Row
+        ref={rowElement}
+        $offset={offset}
+        $columngap={columnGap}
+        $rowsize={rowSize}
+        $datalength={dataLength}
+        custom={{ index, offset }}
+        variants={rowVariants}
+        initial="initial"
+        animate="move"
+        transition={{ type: "tween", ease: "easeInOut", duration: 1 }}
       >
-        <Row
-          ref={rowElement}
-          key={page}
-          custom={{ isBack }}
-          variants={rowVariants}
-          initial="hidden"
-          animate="visible"
-          exit="exit"
-          transition={{ type: "tween", ease: "easeInOut", duration: 0.5 }}
-        >
-          {data?.results
-            .slice(
-              page === lastPage ? dataLength - offset : offset * page,
-              page === lastPage ? dataLength : offset * page + offset
-            )
-            .map((movie) => (
-              <Box key={movie.id}>
-                <Img src={getImage(movie.backdrop_path, "w500")} />
-              </Box>
-            ))}
-        </Row>
-      </AnimatePresence>
+        {data?.results.map((movie) => (
+          <Box key={movie.id}>
+            <Img src={getImage(movie.backdrop_path, "w500")} />
+          </Box>
+        ))}
+      </Row>
       <Buttons>
         <Button onClick={prevPage}>
           <BsChevronCompactLeft />
