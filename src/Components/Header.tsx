@@ -57,8 +57,8 @@ const Profile = styled.div`
 `;
 
 const NavVariants = {
-  initial: { backgroundColor: "rgba(0, 0, 0, 0)" },
-  scroll: { backgroundColor: "rgba(0, 0, 0, 1)" },
+  initial: { backgroundColor: "rgba(12, 12, 12, 0)" },
+  scroll: { backgroundColor: "rgba(12, 12, 12, 1)" },
 };
 
 function Header() {
@@ -66,7 +66,9 @@ function Header() {
   const navAnimation = useAnimation();
   const { register, handleSubmit } = useForm<{ keyword: string }>();
 
-  const onSubmit = ({ keyword }: { keyword: string }) => {};
+  const onSubmit = ({ keyword }: { keyword: string }) => {
+    console.log(keyword);
+  };
 
   useEffect(() => {
     scrollY.onChange(() => {

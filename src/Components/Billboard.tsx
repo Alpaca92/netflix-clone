@@ -6,7 +6,11 @@ import { RiInformationLine } from "react-icons/ri";
 const Wrapper = styled.div<{ $bgpath: string }>`
   height: 100vh;
   padding: 0 60px;
-  background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.4)),
+  background-image: linear-gradient(
+      rgba(20, 20, 20, 0),
+      rgba(20, 20, 20, 0.4) 70%,
+      rgba(20, 20, 20, 1)
+    ),
     url(${(props) => props.$bgpath});
   background-size: cover;
   background-position: center center;
@@ -16,6 +20,7 @@ const Wrapper = styled.div<{ $bgpath: string }>`
 `;
 
 const Title = styled.h2`
+  margin-top: 100px;
   font-size: 120px;
 `;
 
@@ -24,6 +29,7 @@ const Overview = styled.p`
   width: 50%;
   font-size: 30px;
   word-break: keep-all;
+  line-height: 1.3;
 `;
 
 const More = styled.button`
