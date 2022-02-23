@@ -40,18 +40,20 @@ interface GetTv {
 
 type GetVideosArgs = Search | GetMovies | GetTv;
 
-export const getVideos = async ({ type, option }: GetVideosArgs) => {
-  let url = `${BASE_URL}/${type}/${option.category}?api_key=${TBDB_KEY}&language=ko`;
+export const getVideos = async (args: GetVideosArgs) => {
+  const {
+    type,
+    option: { category },
+  } = args;
+  let url = `${BASE_URL}/${type}/${category}?api_key=${TBDB_KEY}&language=ko`;
 
-  return url;
+  if (type === "search") {
+    const {
+      option: { keyword, adult },
+    } = args;
+
+    url += `&keyword=${keyword}&include_adult=${adult}`;
+  }
+
+  return await (await fetch(url)).json();
 };
-
-export const getTopRatedMovies = async () =>
-  await (
-    await fetch(`${BASE_URL}/movie/top_rated?api_key=${TBDB_KEY}&language=ko`)
-  ).json();
-
-export const getNowPlayingMovies = async () =>
-  await (
-    await fetch(`${BASE_URL}/movie/now_playing?api_key=${TBDB_KEY}&language=ko`)
-  ).json();

@@ -1,6 +1,6 @@
 import { useQuery } from "react-query";
 import styled from "styled-components";
-import { getTopRatedMovies, ApiData, getNowPlayingMovies } from "../api";
+import { ApiData, getVideos } from "../api";
 import Billboard from "../Components/Billboard";
 import Carousel from "../Components/Carousel";
 import Loading from "../Components/Loading";
@@ -19,10 +19,12 @@ const Title = styled.h3`
 function Home() {
   const { data: topRatedData, isLoading: topRatedLoading } = useQuery<ApiData>(
     ["movies", "topRated"],
-    getTopRatedMovies
+    () => getVideos({ type: "movie", option: { category: "top_rated" } })
   );
   const { data: nowPlayingData, isLoading: nowPlayingLoading } =
-    useQuery<ApiData>(["movies", "nowPlaying"], getNowPlayingMovies);
+    useQuery<ApiData>(["movies", "nowPlaying"], () =>
+      getVideos({ type: "movie", option: { category: "now_playing" } })
+    );
   const isLoading = topRatedLoading && nowPlayingLoading;
 
   return (
