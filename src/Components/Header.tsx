@@ -1,12 +1,10 @@
 import styled from "styled-components";
 import { useViewportScroll, motion, useAnimation } from "framer-motion";
-import profile01 from "../images/profile01.png";
-import profile02 from "../images/profile02.png";
-import profile03 from "../images/profile03.png";
-import profile04 from "../images/profile04.png";
+import profile from "../images/profile.png";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
+import { BiSearch } from "react-icons/bi";
 
 const Nav = styled(motion.nav)`
   padding: 20px 60px;
@@ -44,18 +42,34 @@ const Item = styled.li`
   }
 `;
 
-const Search = styled.form``;
+const Search = styled.form`
+  position: relative;
+`;
 
 const Input = styled.input`
+  all: unset;
+  box-sizing: border-box;
+  height: 100%;
+  width: 200px;
+  padding-left: 25px;
+  background-color: rgba(20, 20, 20, 0.6);
+  color: ${(props) => props.theme.white.light};
   margin-right: 20px;
+  border: 1px solid ${(props) => props.theme.white.plain};
+`;
+
+const Button = styled.button`
+  all: unset;
+  position: absolute;
+  font-size: 20px;
+  top: calc((100% - 20px) / 2);
+  left: 5px;
 `;
 
 const Profile = styled.div`
   width: 32px;
   height: 32px;
-  background-image: url(${[profile01, profile02, profile03, profile04][
-    Math.floor(Math.random() * 4 + 1)
-  ]});
+  background-image: url(${profile});
   background-size: cover;
   border-radius: 5px;
 `;
@@ -115,8 +129,11 @@ function Header() {
           <Input
             {...register("keyword", { required: true })}
             type="text"
-            placeholder="제목, 사람, 영화"
+            placeholder="검색어를 입력해주세요."
           />
+          <Button>
+            <BiSearch />
+          </Button>
         </Search>
         <Profile />
       </Col>
