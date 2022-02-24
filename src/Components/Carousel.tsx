@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { ApiData } from "../api";
 import { getImage, calculateRelativeOffset } from "../utils";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import Preview from "./Preview";
 
 interface RowProps {
   $imagegap: number;
@@ -41,16 +42,6 @@ const Row = styled(motion.ul)<RowProps>`
   grid-template-columns: repeat(${(props) => props.$datalength}, 1fr);
   padding: 0 ${(props) => props.$imagegap}px;
   column-gap: ${(props) => props.$imagegap}px;
-`;
-
-const Box = styled.li`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const Img = styled.img`
-  width: 100%;
 `;
 
 const Button = styled(motion.button)`
@@ -155,9 +146,7 @@ function Carousel({ data }: { data?: ApiData }) {
         transition={{ type: "tween", ease: "easeInOut", duration: 0.8 }}
       >
         {data?.results.map((video) => (
-          <Box key={video.id}>
-            <Img src={getImage(video.backdrop_path, "w500")} />
-          </Box>
+          <Preview key={video.id} video={video} />
         ))}
       </Row>
       <Button

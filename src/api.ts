@@ -1,7 +1,7 @@
 const BASE_URL = `https://api.themoviedb.org/3`;
 const TBDB_KEY = `2fb9b79ab51f1e3d6820fdd5feda6a3e`;
 
-interface Result {
+export interface Video {
   backdrop_path: string;
   genre_ids: number[];
   id: number;
@@ -12,7 +12,7 @@ interface Result {
 }
 
 export interface ApiData {
-  results: Result[];
+  results: Video[];
 }
 
 interface Search {

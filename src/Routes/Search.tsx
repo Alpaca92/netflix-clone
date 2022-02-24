@@ -4,6 +4,7 @@ import { useSearchParams } from "react-router-dom";
 import styled from "styled-components";
 import { ApiData, getVideos } from "../api";
 import Loading from "../Components/Loading";
+import Preview from "../Components/Preview";
 import { calculateRelativeOffset, getImage } from "../utils";
 
 const Wrapper = styled.div``;
@@ -59,9 +60,7 @@ function Search() {
             {data?.results
               .filter((video) => video.backdrop_path && video.overview)
               .map((video) => (
-                <Box key={video.id}>
-                  <Img src={getImage(video.backdrop_path)} />
-                </Box>
+                <Preview key={video.id} video={video} />
               ))}
           </Grid>
         </Wrapper>
