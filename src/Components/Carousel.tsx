@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { useEffect, useReducer, useState } from "react";
 import styled from "styled-components";
 import { ApiData } from "../api";
-import { getImage, calculateRelativeOffset } from "../utils";
+import { calculateRelativeOffset } from "../utils";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import Preview from "./Preview";
 
@@ -50,7 +50,7 @@ const Button = styled(motion.button)`
   top: 0;
   height: 100%;
   cursor: pointer;
-  font-size: 20px;
+  font-size: 30px;
   color: ${(props) => props.theme.white.light};
   display: none;
 

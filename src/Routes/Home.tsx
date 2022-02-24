@@ -6,7 +6,7 @@ import Carousel from "../Components/Carousel";
 import Loading from "../Components/Loading";
 
 const Wrapper = styled.div`
-  position: relative;
+  margin-bottom: 50px;
 `;
 
 const Title = styled.h3`
@@ -18,14 +18,19 @@ const Title = styled.h3`
 
 function Home() {
   const { data: topRatedData, isLoading: topRatedLoading } = useQuery<ApiData>(
-    ["movies", "topRated"],
+    ["movies", "top_rated"],
     () => getVideos({ type: "movie", option: { category: "top_rated" } })
   );
   const { data: nowPlayingData, isLoading: nowPlayingLoading } =
-    useQuery<ApiData>(["movies", "nowPlaying"], () =>
+    useQuery<ApiData>(["movies", "now_playing"], () =>
       getVideos({ type: "movie", option: { category: "now_playing" } })
     );
-  const isLoading = topRatedLoading && nowPlayingLoading;
+  const { data: upcomingData, isLoading: upcomingLoading } = useQuery<ApiData>(
+    ["movies", "upcoming"],
+    () => getVideos({ type: "movie", option: { category: "upcoming" } })
+  );
+
+  const isLoading = topRatedLoading && nowPlayingLoading && upcomingLoading;
 
   return (
     <>
@@ -37,6 +42,10 @@ function Home() {
           <Wrapper>
             <Title>지금 뜨는 영화</Title>
             <Carousel data={topRatedData} />
+          </Wrapper>
+          <Wrapper>
+            <Title>출시 예정 영화</Title>
+            <Carousel data={upcomingData} />
           </Wrapper>
         </>
       )}

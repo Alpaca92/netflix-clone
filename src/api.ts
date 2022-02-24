@@ -27,7 +27,7 @@ interface Search {
 interface GetMovies {
   type: "movie";
   option: {
-    category: "top_rated" | "now_playing";
+    category: "top_rated" | "now_playing" | "upcoming";
   };
 }
 
