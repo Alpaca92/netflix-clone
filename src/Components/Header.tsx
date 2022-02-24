@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { useViewportScroll, motion, useAnimation } from "framer-motion";
 import profile from "../images/profile.png";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { BiSearch } from "react-icons/bi";
@@ -46,7 +46,7 @@ const Search = styled.form`
   position: relative;
 `;
 
-const Input = styled.input`
+const Input = styled(motion.input)`
   all: unset;
   box-sizing: border-box;
   height: 100%;
@@ -56,14 +56,16 @@ const Input = styled.input`
   color: ${(props) => props.theme.white.light};
   margin-right: 20px;
   border: 1px solid ${(props) => props.theme.white.plain};
+  transform-origin: right center;
 `;
 
-const Button = styled.button`
+const Button = styled(motion.button)`
   all: unset;
   position: absolute;
   font-size: 20px;
   top: calc((100% - 20px) / 2);
   left: 5px;
+  cursor: pointer;
 `;
 
 const Profile = styled.div`
@@ -79,14 +81,31 @@ const NavVariants = {
   scroll: { backgroundColor: "rgba(12, 12, 12, 1)" },
 };
 
+const InputVariants = {
+  close: { scaleX: 0, transition: { type: "linear" } },
+  open: { scaleX: 1, transition: { type: "linear" } },
+};
+
 function Header() {
   const { scrollY } = useViewportScroll();
   const navAnimation = useAnimation();
+  const inputAnimation = useAnimation();
   const { register, handleSubmit } = useForm<{ keyword: string }>();
   const navigate = useNavigate();
+  const [search, setSearch] = useState(false);
 
   const onSubmit = ({ keyword }: { keyword: string }) => {
     navigate(`search?keyword=${keyword}`);
+  };
+
+  const toggleSearch = () => {
+    if (search) {
+      inputAnimation.start("close");
+    } else {
+      inputAnimation.start("open");
+    }
+
+    setSearch((prev) => !prev);
   };
 
   useEffect(() => {
@@ -130,8 +149,15 @@ function Header() {
             {...register("keyword", { required: true })}
             type="text"
             placeholder="검색어를 입력해주세요."
+            variants={InputVariants}
+            initial="close"
+            animate={inputAnimation}
           />
-          <Button>
+          <Button
+            onClick={toggleSearch}
+            animate={{ x: search ? 0 : 180 }}
+            transition={{ type: "linear" }}
+          >
             <BiSearch />
           </Button>
         </Search>
