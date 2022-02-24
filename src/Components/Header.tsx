@@ -154,6 +154,7 @@ function Header() {
             animate={inputAnimation}
           />
           <Button
+            type="button"
             onClick={toggleSearch}
             animate={{ x: search ? 0 : 180 }}
             transition={{ type: "linear" }}

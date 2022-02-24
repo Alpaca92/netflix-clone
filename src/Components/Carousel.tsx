@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { useEffect, useReducer, useState } from "react";
 import styled from "styled-components";
 import { ApiData } from "../api";
-import { getImage } from "../utils";
+import { getImage, calculateRelativeOffset } from "../utils";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 interface RowProps {
@@ -87,21 +87,6 @@ const rowVariants = {
 };
 
 function Carousel({ data }: { data?: ApiData }) {
-  const calculateRelativeOffset = (width: number) => {
-    switch (true) {
-      case width <= 500:
-        return 2;
-      case 500 < width && width <= 800:
-        return 3;
-      case 800 < width && width <= 1100:
-        return 4;
-      case 1100 < width && width <= 1400:
-        return 5;
-      default:
-        return 6;
-    }
-  };
-
   const reducer = (index: number, action: Action) => {
     switch (action.type) {
       case "INCREMENT":
@@ -169,9 +154,9 @@ function Carousel({ data }: { data?: ApiData }) {
         animate="move"
         transition={{ type: "tween", ease: "easeInOut", duration: 0.8 }}
       >
-        {data?.results.map((movie) => (
-          <Box key={movie.id}>
-            <Img src={getImage(movie.backdrop_path, "w500")} />
+        {data?.results.map((video) => (
+          <Box key={video.id}>
+            <Img src={getImage(video.backdrop_path, "w500")} />
           </Box>
         ))}
       </Row>

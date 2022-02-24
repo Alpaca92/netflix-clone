@@ -52,7 +52,9 @@ export const getVideos = async (args: GetVideosArgs) => {
       option: { keyword, adult },
     } = args;
 
-    url += `&keyword=${keyword}&include_adult=${adult}`;
+    url += `&query=${keyword}`;
+
+    if (!adult) url += `&include_adult=${adult}`;
   }
 
   return await (await fetch(url)).json();
