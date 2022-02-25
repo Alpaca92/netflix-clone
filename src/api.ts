@@ -44,7 +44,7 @@ type GetVideosArgs = GetMovies | GetTv;
 export interface Detail {
   adult: boolean;
   backdrop_path: string;
-  genres: { name: string }[];
+  genres: { name: string; id: number }[];
   overview: string;
   runtime: number;
   vote_average: number;

@@ -41,7 +41,22 @@ const TextContainer = styled.div`
   padding: 30px 50px;
 `;
 
+const Genres = styled.ul`
+  display: flex;
+`;
+
+const Genre = styled.li`
+  padding: 5px 10px;
+  border-radius: 5px;
+  background-color: black;
+
+  & + li {
+    margin-left: 10px;
+  }
+`;
+
 const Title = styled.h4`
+  margin-top: 10px;
   font-size: 30px;
   display: flex;
   align-items: center;
@@ -54,7 +69,7 @@ const Svg = styled.svg`
 
 const Date = styled.small`
   display: block;
-  margin-top: 10px;
+  margin-top: 5px;
   font-size: 12px;
   color: #777;
 `;
@@ -94,6 +109,11 @@ function Modal() {
             />
 
             <TextContainer>
+              <Genres>
+                {data?.genres.map((genre) => (
+                  <Genre key={genre.id}>{genre.name}</Genre>
+                ))}
+              </Genres>
               <Title>
                 {data?.name || data?.title}{" "}
                 {data?.adult ? (
