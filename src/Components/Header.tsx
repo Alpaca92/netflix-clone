@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { BiSearch } from "react-icons/bi";
+import media from "../media";
 
 const Nav = styled(motion.nav)`
   padding: 20px 60px;
@@ -15,6 +16,10 @@ const Nav = styled(motion.nav)`
   top: 0;
   z-index: 999;
   width: 100%;
+
+  ${media.tablet} {
+    padding: 20px 30px;
+  }
 `;
 
 const Col = styled.div`
@@ -25,6 +30,10 @@ const Logo = styled.svg`
   width: 100px;
   height: calc(100px / 3.7);
   fill: ${(props) => props.theme.red};
+
+  ${media.tablet} {
+    width: 80px;
+  }
 `;
 
 const Items = styled.ul`

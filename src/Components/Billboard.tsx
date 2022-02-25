@@ -22,6 +22,10 @@ const Wrapper = styled.div<{ $bgpath: string }>`
   display: flex;
   flex-direction: column;
   justify-content: center;
+
+  ${media.desktop} {
+    padding: 0 30px;
+  }
 `;
 
 const Title = styled.h2`

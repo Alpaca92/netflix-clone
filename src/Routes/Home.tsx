@@ -18,6 +18,10 @@ const Title = styled.h3`
   margin-bottom: 20px;
   font-size: 28px;
   font-weight: 600;
+
+  ${media.tablet} {
+    font-size: 22px;
+  }
 `;
 
 function Home() {
