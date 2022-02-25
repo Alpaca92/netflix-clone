@@ -21,8 +21,8 @@ const ModalContainer = styled(motion.div)<{ $scrolly: number }>`
   left: 0;
   right: 0;
   margin: 0 auto;
-
-  background-color: #fff;
+  border-radius: 5px;
+  background-color: ${(props) => props.theme.black.light};
 `;
 
 function Modal() {

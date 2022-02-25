@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { ApiData, getVideos } from "../api";
 import Loading from "../Components/Loading";
 import Preview from "../Components/Preview";
-import { calculateRelativeOffset, getImage } from "../utils";
+import { calculateRelativeOffset } from "../utils";
 
 const Wrapper = styled.div``;
 
@@ -15,12 +15,6 @@ const Grid = styled.ul<{ $column: number }>`
   grid-gap: 50px 10px;
   display: grid;
   grid-template-columns: repeat(${(props) => props.$column}, 1fr);
-`;
-
-const Box = styled.li``;
-
-const Img = styled.img`
-  width: 100%;
 `;
 
 function Search() {

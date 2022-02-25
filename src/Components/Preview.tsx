@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useSearchParams } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { Video } from "../api";
@@ -18,8 +19,17 @@ const Img = styled.img`
 
 function Preview({ video }: { video: Video }) {
   const setShowModal = useSetRecoilState(showModalState);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const showVideoDetail = () => {
+    const keyword = searchParams.get("keyword");
+
+    if (keyword) {
+      setSearchParams({ keyword, id: video.id + "" });
+    } else {
+      setSearchParams({ id: video.id + "" });
+    }
+
     document.body.style.overflowY = "hidden";
     setShowModal(true);
   };
