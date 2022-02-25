@@ -133,13 +133,10 @@ function Header() {
         </Link>
         <Items>
           <Item>
-            <Link to="">홈</Link>
+            <Link to="">Home</Link>
           </Item>
           <Item>
-            <Link to="series">시리즈</Link>
-          </Item>
-          <Item>
-            <Link to="movies">영화</Link>
+            <Link to="tv">TV Show</Link>
           </Item>
         </Items>
       </Col>

@@ -3,7 +3,7 @@ import { getImage } from "../utils";
 import { ApiData } from "../api";
 import { RiInformationLine } from "react-icons/ri";
 import Modal from "./Modal";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import { showModalState } from "../atoms";
 import { useSearchParams } from "react-router-dom";
 
