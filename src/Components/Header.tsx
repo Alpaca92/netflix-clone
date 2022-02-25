@@ -17,13 +17,14 @@ const Nav = styled(motion.nav)`
   z-index: 999;
   width: 100%;
 
-  ${media.tablet} {
-    padding: 20px 30px;
+  @media (max-width: 1024px) {
+    padding: 10px 30px;
   }
 `;
 
 const Col = styled.div`
   display: flex;
+  align-items: center;
 `;
 
 const Logo = styled.svg`
@@ -31,7 +32,7 @@ const Logo = styled.svg`
   height: calc(100px / 3.7);
   fill: ${(props) => props.theme.red};
 
-  ${media.tablet} {
+  ${media.desktop} {
     width: 80px;
   }
 `;
@@ -49,10 +50,26 @@ const Item = styled.li`
   & + li {
     margin-left: 20px;
   }
+
+  ${media.desktop} {
+    &:first-child {
+      margin-left: 20px;
+    }
+  }
+
+  ${media.tablet} {
+    width: 50px;
+    font-size: 12px;
+
+    &:first-child {
+      display: none;
+    }
+  }
 `;
 
 const Search = styled.form`
   position: relative;
+  height: 100%;
 `;
 
 const Input = styled(motion.input)`
