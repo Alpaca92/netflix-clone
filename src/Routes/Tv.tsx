@@ -10,7 +10,7 @@ import Preview from "../Components/Preview";
 import { calculateRelativeOffset } from "../utils";
 
 const Wrapper = styled.div`
-  margin-top: 100px;
+  margin: 100px 0;
 `;
 
 const Grid = styled.ul<{ $column: number }>`

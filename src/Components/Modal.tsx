@@ -8,6 +8,7 @@ import { useQuery } from "react-query";
 import { Detail, getDetail } from "../api";
 import Loading from "./Loading";
 import { getImage } from "../utils";
+import media from "../media";
 
 const Overlay = styled.div`
   position: fixed;
@@ -39,20 +40,34 @@ const Img = styled.img`
 
 const TextContainer = styled.div`
   padding: 30px 50px;
+
+  ${media.tablet} {
+    padding: 20px 30px 30px;
+  }
 `;
 
 const Genres = styled.ul`
-  display: flex;
+  width: 80%;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, auto));
+  gap: 10px;
+  font-size: 14px;
+
+  ${media.tablet} {
+    font-size: 12px;
+    width: 100%;
+    grid-template-columns: repeat(auto-fill, minmax(80px, auto));
+  }
 `;
 
 const Genre = styled.li`
   padding: 5px 10px;
   border-radius: 5px;
   background-color: black;
-
-  & + li {
-    margin-left: 10px;
-  }
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 `;
 
 const Title = styled.h4`
@@ -60,6 +75,11 @@ const Title = styled.h4`
   font-size: 30px;
   display: flex;
   align-items: center;
+
+  ${media.tablet} {
+    font-size: 20px;
+    margin-top: 20px;
+  }
 `;
 
 const Svg = styled.svg`
@@ -72,12 +92,21 @@ const Date = styled.small`
   margin-top: 5px;
   font-size: 12px;
   color: #777;
+
+  ${media.tablet} {
+    font-size: 11px;
+  }
 `;
 
 const Overview = styled.p`
   margin-top: 20px;
   line-height: 1.4;
   word-break: keep-all;
+
+  ${media.tablet} {
+    margin-top: 15px;
+    font-size: 13px;
+  }
 `;
 
 function Modal() {
