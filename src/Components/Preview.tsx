@@ -17,7 +17,7 @@ const Img = styled.img`
   width: 100%;
 `;
 
-function Preview({ video }: { video: Video }) {
+function Preview({ video, type }: { video: Video; type: string }) {
   const setShowModal = useSetRecoilState(showModalState);
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -25,9 +25,9 @@ function Preview({ video }: { video: Video }) {
     const keyword = searchParams.get("keyword");
 
     if (keyword) {
-      setSearchParams({ keyword, id: video.id + "" });
+      setSearchParams({ keyword, id: video.id + "", type });
     } else {
-      setSearchParams({ id: video.id + "" });
+      setSearchParams({ id: video.id + "", type });
     }
 
     document.body.style.overflowY = "hidden";

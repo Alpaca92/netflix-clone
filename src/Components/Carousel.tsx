@@ -77,7 +77,7 @@ const rowVariants = {
   },
 };
 
-function Carousel({ data }: { data?: ApiData }) {
+function Carousel({ data, type }: { data?: ApiData; type: string }) {
   const reducer = (index: number, action: Action) => {
     switch (action.type) {
       case "INCREMENT":
@@ -145,9 +145,11 @@ function Carousel({ data }: { data?: ApiData }) {
         animate="move"
         transition={{ type: "tween", ease: "easeInOut", duration: 0.8 }}
       >
-        {data?.results.filter(video => video.backdrop_path).map((video) => (
-          <Preview key={video.id} video={video} />
-        ))}
+        {data?.results
+          .filter((video) => video.backdrop_path)
+          .map((video) => (
+            <Preview key={video.id} video={video} type={type} />
+          ))}
       </Row>
       <Button
         onClick={prevPage}

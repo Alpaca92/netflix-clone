@@ -20,7 +20,7 @@ const Title = styled.h3`
 `;
 
 function Home() {
-  const activateModal = useRecoilValue(showModalState);
+  const showModal = useRecoilValue(showModalState);
   const { data: nowPlayingMovieData, isLoading: nowPlayingMovieLoading } =
     useQuery<ApiData>(["movies", "now_playing"], () =>
       getVideos({ type: "movie", option: { category: "now_playing" } })
@@ -55,22 +55,25 @@ function Home() {
             {
               title: "지금 뜨는 영화",
               data: topRatedMovieData,
+              type: "movie",
             },
             {
               title: "출시 예정 영화",
               data: upcomingMovieData,
+              type: "movie",
             },
             {
               title: "지금 뜨는 컨텐츠",
               data: topRatedTvData,
+              type: "tv",
             },
           ].map((video, index) => (
             <Wrapper key={index}>
               <Title>{video.title}</Title>
-              <Carousel data={video.data} />
+              <Carousel data={video.data} type={video.type} />
             </Wrapper>
           ))}
-          {activateModal && <Modal />}
+          {showModal && <Modal />}
         </>
       )}
     </>

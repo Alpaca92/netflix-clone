@@ -9,6 +9,7 @@ export interface Video {
   poster_path: string;
   title?: string;
   name?: string;
+  media_type?: string;
 }
 
 export interface ApiData {
@@ -45,15 +46,16 @@ export interface Detail {
   backdrop_path: string;
   genres: { name: string }[];
   overview: string;
-  release_date: string;
   runtime: number;
+  vote_average: number;
   title?: string;
   name?: string;
-  vote_average: number;
+  release_date?: string;
+  first_air_date?: string;
 }
 
 interface GetDetailArgs {
-  type: "movie" | "tv";
+  type: string;
   id: number;
 }
 

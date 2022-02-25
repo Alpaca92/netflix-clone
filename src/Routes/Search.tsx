@@ -1,9 +1,12 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "react-query";
 import { useSearchParams } from "react-router-dom";
+import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { ApiData, searchVideos } from "../api";
+import { showModalState } from "../atoms";
 import Loading from "../Components/Loading";
+import Modal from "../Components/Modal";
 import Preview from "../Components/Preview";
 import { calculateRelativeOffset } from "../utils";
 
@@ -18,6 +21,7 @@ const Grid = styled.ul<{ $column: number }>`
 `;
 
 function Search() {
+  const showModal = useRecoilValue(showModalState);
   const [column, setColumn] = useState(
     calculateRelativeOffset(window.innerWidth)
   );
@@ -49,15 +53,22 @@ function Search() {
       {isLoading ? (
         <Loading />
       ) : (
-        <Wrapper>
-          <Grid $column={column}>
-            {data?.results
-              .filter((video) => video.backdrop_path && video.overview)
-              .map((video) => (
-                <Preview key={video.id} video={video} />
-              ))}
-          </Grid>
-        </Wrapper>
+        <>
+          <Wrapper>
+            <Grid $column={column}>
+              {data?.results
+                .filter((video) => video.backdrop_path && video.media_type)
+                .map((video) => (
+                  <Preview
+                    key={video.id}
+                    video={video}
+                    type={video.media_type || ""}
+                  />
+                ))}
+            </Grid>
+          </Wrapper>
+          {showModal && <Modal />}
+        </>
       )}
     </>
   );
