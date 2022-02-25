@@ -21,20 +21,28 @@ const Title = styled.h3`
 
 function Home() {
   const activateModal = useRecoilValue(showModalState);
-  const { data: topRatedData, isLoading: topRatedLoading } = useQuery<ApiData>(
-    ["movies", "top_rated"],
-    () => getVideos({ type: "movie", option: { category: "top_rated" } })
-  );
-  const { data: nowPlayingData, isLoading: nowPlayingLoading } =
+  const { data: nowPlayingMovieData, isLoading: nowPlayingMovieLoading } =
     useQuery<ApiData>(["movies", "now_playing"], () =>
       getVideos({ type: "movie", option: { category: "now_playing" } })
     );
-  const { data: upcomingData, isLoading: upcomingLoading } = useQuery<ApiData>(
-    ["movies", "upcoming"],
-    () => getVideos({ type: "movie", option: { category: "upcoming" } })
-  );
+  const { data: topRatedMovieData, isLoading: topRatedMovieLoading } =
+    useQuery<ApiData>(["movies", "top_rated"], () =>
+      getVideos({ type: "movie", option: { category: "top_rated" } })
+    );
+  const { data: upcomingMovieData, isLoading: upcomingMovieLoading } =
+    useQuery<ApiData>(["movies", "upcoming"], () =>
+      getVideos({ type: "movie", option: { category: "upcoming" } })
+    );
+  const { data: topRatedTvData, isLoading: topRatedTvLoading } =
+    useQuery<ApiData>(["tv", "top_rated"], () =>
+      getVideos({ type: "tv", option: { category: "top_rated" } })
+    );
 
-  const isLoading = topRatedLoading && nowPlayingLoading && upcomingLoading;
+  const isLoading =
+    topRatedMovieLoading &&
+    nowPlayingMovieLoading &&
+    upcomingMovieLoading &&
+    topRatedTvLoading;
 
   return (
     <>
@@ -42,15 +50,26 @@ function Home() {
         <Loading />
       ) : (
         <>
-          <Billboard data={nowPlayingData} />
-          <Wrapper>
-            <Title>지금 뜨는 영화</Title>
-            <Carousel data={topRatedData} />
-          </Wrapper>
-          <Wrapper>
-            <Title>출시 예정 영화</Title>
-            <Carousel data={upcomingData} />
-          </Wrapper>
+          <Billboard data={nowPlayingMovieData} />
+          {[
+            {
+              title: "지금 뜨는 영화",
+              data: topRatedMovieData,
+            },
+            {
+              title: "출시 예정 영화",
+              data: upcomingMovieData,
+            },
+            {
+              title: "지금 뜨는 컨텐츠",
+              data: topRatedTvData,
+            },
+          ].map((video, index) => (
+            <Wrapper key={index}>
+              <Title>{video.title}</Title>
+              <Carousel data={video.data} />
+            </Wrapper>
+          ))}
           {activateModal && <Modal />}
         </>
       )}

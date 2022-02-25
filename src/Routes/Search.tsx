@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useQuery } from "react-query";
 import { useSearchParams } from "react-router-dom";
 import styled from "styled-components";
-import { ApiData, getVideos } from "../api";
+import { ApiData, searchVideos } from "../api";
 import Loading from "../Components/Loading";
 import Preview from "../Components/Preview";
 import { calculateRelativeOffset } from "../utils";
@@ -24,7 +24,7 @@ function Search() {
   const [searchParams] = useSearchParams();
   const [keyword, setKeyword] = useState(searchParams.get("keyword") || "");
   const { data, isLoading } = useQuery<ApiData>(["search", keyword], () =>
-    getVideos({
+    searchVideos({
       type: "search",
       option: { category: "multi", keyword, adult: false },
     })

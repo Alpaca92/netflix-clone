@@ -2,6 +2,8 @@ import styled from "styled-components";
 import { motion, useViewportScroll } from "framer-motion";
 import { useSetRecoilState } from "recoil";
 import { showModalState } from "../atoms";
+import { useSearchParams } from "react-router-dom";
+import { useState } from "react";
 
 const Overlay = styled.div`
   position: fixed;
@@ -28,6 +30,10 @@ const ModalContainer = styled(motion.div)<{ $scrolly: number }>`
 function Modal() {
   const setShowModal = useSetRecoilState(showModalState);
   const { scrollY } = useViewportScroll();
+  const [searchParams] = useSearchParams();
+  const [id, setId] = useState(parseInt(searchParams.get("id") || "0"));
+
+  console.log(id);
 
   const hideModal = () => {
     document.body.style.overflowY = "visible";

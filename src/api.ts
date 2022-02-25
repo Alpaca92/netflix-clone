@@ -7,8 +7,8 @@ export interface Video {
   id: number;
   overview: string;
   poster_path: string;
-  release_date: string;
-  title: string;
+  title?: string;
+  name?: string;
 }
 
 export interface ApiData {
@@ -38,24 +38,49 @@ interface GetTv {
   };
 }
 
-type GetVideosArgs = Search | GetMovies | GetTv;
+type GetVideosArgs = GetMovies | GetTv;
+
+export interface Detail {
+  adult: boolean;
+  backdrop_path: string;
+  genres: { name: string }[];
+  overview: string;
+  release_date: string;
+  runtime: number;
+  title?: string;
+  name?: string;
+  vote_average: number;
+}
+
+interface GetDetailArgs {
+  type: "movie" | "tv";
+  id: number;
+}
 
 export const getVideos = async (args: GetVideosArgs) => {
   const {
     type,
     option: { category },
   } = args;
-  let url = `${BASE_URL}/${type}/${category}?api_key=${TBDB_KEY}&language=ko`;
+  const url = `${BASE_URL}/${type}/${category}?api_key=${TBDB_KEY}&language=ko`;
 
-  if (type === "search") {
-    const {
-      option: { keyword, adult },
-    } = args;
+  return await (await fetch(url)).json();
+};
 
-    url += `&query=${keyword}`;
+export const searchVideos = async (args: Search) => {
+  const {
+    type,
+    option: { category, keyword },
+  } = args;
+  let url = `${BASE_URL}/${type}/${category}?api_key=${TBDB_KEY}&language=ko&query=${keyword}`;
 
-    if (!adult) url += `&include_adult=${adult}`;
-  }
+  if (!args.option.adult) url += `&include_adult=${args.option.adult}`;
+
+  return await (await fetch(url)).json();
+};
+
+export const getDetail = async ({ type, id }: GetDetailArgs) => {
+  const url = `${BASE_URL}/${type}/${id}?api_key=${TBDB_KEY}&language=ko`;
 
   return await (await fetch(url)).json();
 };

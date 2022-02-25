@@ -145,7 +145,7 @@ function Carousel({ data }: { data?: ApiData }) {
         animate="move"
         transition={{ type: "tween", ease: "easeInOut", duration: 0.8 }}
       >
-        {data?.results.map((video) => (
+        {data?.results.filter(video => video.backdrop_path).map((video) => (
           <Preview key={video.id} video={video} />
         ))}
       </Row>
