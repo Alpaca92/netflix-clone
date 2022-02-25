@@ -97,17 +97,14 @@ function Modal() {
 
   return (
     <>
-      <Overlay onClick={hideModal} />
+      <Overlay onClick={hideModal}>{isLoading && <Loading />}</Overlay>
       <ModalContainer $scrolly={scrollY.get()}>
-        {isLoading ? (
-          <Loading />
-        ) : (
+        {isLoading || (
           <>
             <Img
               src={getImage(data?.backdrop_path || "")}
               alt={`${type === "tv" ? data?.name : data?.title}의 사진`}
             />
-
             <TextContainer>
               <Genres>
                 {data?.genres.map((genre) => (

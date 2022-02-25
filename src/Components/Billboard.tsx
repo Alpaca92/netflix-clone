@@ -2,6 +2,10 @@ import styled from "styled-components";
 import { getImage } from "../utils";
 import { ApiData } from "../api";
 import { RiInformationLine } from "react-icons/ri";
+import Modal from "./Modal";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { showModalState } from "../atoms";
+import { useSearchParams } from "react-router-dom";
 
 const Wrapper = styled.div<{ $bgpath: string }>`
   height: 100vh;
@@ -53,16 +57,26 @@ const More = styled.button`
 `;
 
 function Billboard({ data }: { data?: ApiData }) {
+  const [showModal, setShowModal] = useRecoilState(showModalState);
+  const [_, setSearchParams] = useSearchParams();
   const movie = data?.results[3];
+  const showBillboardDetail = () => {
+    setSearchParams({ id: movie?.id + "", type: "movie" });
+    document.body.style.overflowY = "hidden";
+    setShowModal(true);
+  };
 
   return (
-    <Wrapper $bgpath={getImage(movie?.backdrop_path || "")}>
-      <Title>{movie?.title}</Title>
-      <Overview>{movie?.overview}</Overview>
-      <More>
-        <RiInformationLine style={{ marginRight: "5px" }} /> 상세 정보
-      </More>
-    </Wrapper>
+    <>
+      <Wrapper $bgpath={getImage(movie?.backdrop_path || "")}>
+        <Title>{movie?.title}</Title>
+        <Overview>{movie?.overview}</Overview>
+        <More onClick={showBillboardDetail}>
+          <RiInformationLine style={{ marginRight: "5px" }} /> 상세 정보
+        </More>
+      </Wrapper>
+      {showModal && <Modal />}
+    </>
   );
 }
 
