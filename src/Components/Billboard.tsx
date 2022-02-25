@@ -6,6 +6,7 @@ import Modal from "./Modal";
 import { useRecoilState } from "recoil";
 import { showModalState } from "../atoms";
 import { useSearchParams } from "react-router-dom";
+import media from "../media";
 
 const Wrapper = styled.div<{ $bgpath: string }>`
   height: 100vh;
@@ -24,16 +25,37 @@ const Wrapper = styled.div<{ $bgpath: string }>`
 `;
 
 const Title = styled.h2`
+  font-weight: 600;
   margin-top: 100px;
   font-size: 120px;
+
+  ${media.desktop} {
+    margin-top: 0px;
+    font-size: 60px;
+  }
+
+  ${media.tablet} {
+    font-size: 30px;
+  }
 `;
 
 const Overview = styled.p`
   margin-top: 30px;
   width: 50%;
-  font-size: 30px;
+  font-size: 26px;
   word-break: keep-all;
   line-height: 1.3;
+
+  ${media.desktop} {
+    width: 70%;
+    margin-top: 20px;
+    font-size: 20px;
+  }
+
+  ${media.tablet} {
+    width: 85%;
+    font-size: 14px;
+  }
 `;
 
 const More = styled.button`
@@ -53,6 +75,12 @@ const More = styled.button`
 
   &:hover {
     background-color: rgba(109, 109, 110, 0.4);
+  }
+
+  ${media.tablet} {
+    width: 120px;
+    height: 40px;
+    font-size: 14px;
   }
 `;
 

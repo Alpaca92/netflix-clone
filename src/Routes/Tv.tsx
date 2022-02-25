@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "react-query";
-import { useSearchParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { ApiData, getVideos } from "../api";
@@ -26,7 +25,6 @@ function Tv() {
   const [column, setColumn] = useState(
     calculateRelativeOffset(window.innerWidth)
   );
-  const [searchParams, setSearchParams] = useSearchParams();
   const { isLoading, data } = useQuery<ApiData>(["tv", "popular"], () =>
     getVideos({ type: "tv", option: { category: "popular" } })
   );

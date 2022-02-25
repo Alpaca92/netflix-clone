@@ -7,6 +7,7 @@ import Billboard from "../Components/Billboard";
 import Carousel from "../Components/Carousel";
 import Loading from "../Components/Loading";
 import Modal from "../Components/Modal";
+import media from "../media";
 
 const Wrapper = styled.div`
   margin-bottom: 50px;
