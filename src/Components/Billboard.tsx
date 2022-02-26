@@ -90,7 +90,7 @@ const More = styled.button`
 
 function Billboard({ data }: { data?: ApiData }) {
   const [showModal, setShowModal] = useRecoilState(showModalState);
-  const [_, setSearchParams] = useSearchParams();
+  const [, setSearchParams] = useSearchParams();
   const movie = data?.results[3];
   const showBillboardDetail = () => {
     setSearchParams({ id: movie?.id + "", type: "movie" });
