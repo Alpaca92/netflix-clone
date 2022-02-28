@@ -77,7 +77,7 @@ const rowVariants = {
   },
 };
 
-function Carousel({ data, type }: { data?: ApiData; type: string }) {
+function Carousel({ data, type }: { data: ApiData; type: string }) {
   const reducer = (index: number, action: Action) => {
     switch (action.type) {
       case "INCREMENT":

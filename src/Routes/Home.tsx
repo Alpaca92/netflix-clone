@@ -72,12 +72,14 @@ function Home() {
               data: topRatedTvData,
               type: "tv",
             },
-          ].map((video, index) => (
-            <Wrapper key={index}>
-              <Title>{video.title}</Title>
-              <Carousel data={video.data} type={video.type} />
-            </Wrapper>
-          ))}
+          ].map((video, index) =>
+            video.data ? (
+              <Wrapper key={index}>
+                <Title>{video.title}</Title>
+                <Carousel data={video.data} type={video.type} />
+              </Wrapper>
+            ) : null
+          )}
           {showModal && <Modal />}
         </>
       )}
